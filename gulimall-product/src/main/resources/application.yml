@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3305/gulimall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: gulimall-product
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+mybatis-plus:
+#  mapper文件扫描
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+#      主键自增
+      id-type: auto
+server:
+  port: 10000
