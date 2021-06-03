@@ -1,4 +1,5 @@
-
+server:
+  port: 88
 # 应用名称
 spring:
   application:
@@ -9,16 +10,17 @@ spring:
         server-addr: 127.0.0.1:8848
     gateway:
       routes:
-        - id: baidu_route
-          uri: https://www.baidu.com
+        #          后台管理项目路由规则
+        - id: admin_route
+          uri: lb://gulimall-admin
           predicates:
-            - Query=name,baidu
-        - id: qq_route
-          uri: https://www.qq.com
-          predicates:
-            - Query=name,qq
+            - Path=/api/**
+          filters:
+            #            作用，将/api/**重写为 /gulimall-admin/**
+            - RewritePath=/api/(?<segment>.*),/gulimall-admin/$\{segment}
 
-server:
-  port: 88
+#前端项目发送请求时前缀都带上 /api
+# http://localhost:88/api/captcha.jpg ==> http://localhost:8080/gulimall-admin/captcha.jpg
+
 
 

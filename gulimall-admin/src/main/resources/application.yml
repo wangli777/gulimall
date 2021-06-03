@@ -7,7 +7,7 @@ server:
   port: 8080
   connection-timeout: 5000ms
   servlet:
-    context-path: /renren-fast
+    context-path: /gulimall-admin
 
 spring:
   # 环境 dev|test|prod
@@ -37,6 +37,12 @@ spring:
         min-idle: 5       # 连接池中的最小空闲连接
   mvc:
     throw-exception-if-no-handler-found: true
+  application:
+    name: gulimall-admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 #  resources:
 #    add-mappings: false
 
