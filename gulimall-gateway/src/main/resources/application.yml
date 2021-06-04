@@ -10,17 +10,23 @@ spring:
         server-addr: 127.0.0.1:8848
     gateway:
       routes:
-        #          后台管理项目路由规则
+        #前端项目发送请求时前缀都带上 /api
+        #精确的路由规则放前面，不然会被模糊的规则先匹配
+        #商品模块项目路由规则
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            #作用，将/api/**重写为 /gulimall-admin/**
+            #          http://localhost:88/api/product/category/list ==>  http://localhost:10000/product/category/list
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        #后台管理项目路由规则
         - id: admin_route
           uri: lb://gulimall-admin
           predicates:
             - Path=/api/**
           filters:
-            #            作用，将/api/**重写为 /gulimall-admin/**
+            # 作用，将/api/**重写为 /gulimall-admin/**
+            # http://localhost:88/api/captcha.jpg ==> http://localhost:8080/gulimall-admin/captcha.jpg
             - RewritePath=/api/(?<segment>.*),/gulimall-admin/$\{segment}
-
-#前端项目发送请求时前缀都带上 /api
-# http://localhost:88/api/captcha.jpg ==> http://localhost:8080/gulimall-admin/captcha.jpg
-
-
-

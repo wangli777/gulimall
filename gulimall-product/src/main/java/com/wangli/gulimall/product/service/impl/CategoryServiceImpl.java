@@ -29,6 +29,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return new PageUtils(page);
     }
 
+    @Override
+    public void removeMenusByIds(List<Long> ids) {
+        // TODO: 2021/6/4 检查菜单是否可以删除
+        baseMapper.deleteBatchIds(ids);
+    }
+
     /**
      * 查找所有商品目录分类，父子结构
      *

@@ -1,6 +1,6 @@
 package com.wangli.gulimall.coupon;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
