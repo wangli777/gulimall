@@ -10,6 +10,11 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    alicloud:
+      oss:
+        endpoint: oss-cn-hangzhou.aliyuncs.com
+      access-key: xx
+      secret-key: xx
 mybatis-plus:
 #  mapper文件扫描
   mapper-locations: classpath:/mapper/**/*.xml
