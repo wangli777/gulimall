@@ -1,0 +1,51 @@
+POST http://localhost:88/api/product/brand/save
+Content-Type: application/json
+
+{
+  "brandId": 1,
+  "logo": "http://localhost:88/api/product/brand/save.jpg",
+  "sort": "1",
+  "firstLetter": "f",
+  "showStatus": 3
+}
+
+###
+POST http://localhost:88/api/product/brand/update
+Content-Type: application/json
+
+{
+  "showStatus": 1
+}
+
+###
+POST http://localhost:88/api/product/category/update/sort
+Content-Type: application/json
+
+[
+  {
+    "catId": 1437,
+    "sort": 10
+  },
+  {
+    "catId": 1438,
+    "sort": 2
+  }
+]
+
+###
+POST http://localhost:88/api/product/category/delete
+Content-Type: application/json
+
+[
+  1436
+]
+
+###
+POST http://localhost:88/api/product/category/delete
+Accept: */*
+Cache-Control: no-cache
+
+[1433]
+
+###
+

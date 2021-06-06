@@ -19,16 +19,14 @@
           type="primary"
           @click="addOrUpdateHandle()"
         >新增
-        </el-button
-        >
+        </el-button>
         <el-button
           v-if="isAuth('product:brand:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
         >批量删除
-        </el-button
-        >
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -65,6 +63,13 @@
         align="center"
         label="品牌logo地址"
       >
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 80px"
+            :src="scope.row.logo"
+            :fit="fit"
+          ></el-image>
+        </template>
       </el-table-column>
       <el-table-column
         prop="descript"
@@ -118,15 +123,13 @@
             size="small"
             @click="addOrUpdateHandle(scope.row.brandId)"
           >修改
-          </el-button
-          >
+          </el-button>
           <el-button
             type="text"
             size="small"
             @click="deleteHandle(scope.row.brandId)"
           >删除
-          </el-button
-          >
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -165,6 +168,7 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
+      fit: "contain",
     };
   },
   components: {

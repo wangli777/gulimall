@@ -21,6 +21,14 @@ spring:
             #作用，将/api/**重写为 /gulimall-admin/**
             #          http://localhost:88/api/product/category/list ==>  http://localhost:10000/product/category/list
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+        #第三方模块项目路由规则
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            # http://localhost:88/api/thirdparty/oss/policy ==>  http://localhost:30000/oss/policy
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
         #后台管理项目路由规则
         - id: admin_route
           uri: lb://gulimall-admin
