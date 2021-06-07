@@ -10,9 +10,7 @@ import com.wangli.gulimall.product.entity.CategoryEntity;
 import com.wangli.gulimall.product.service.CategoryService;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -33,6 +31,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void removeMenusByIds(List<Long> ids) {
         // TODO: 2021/6/4 检查菜单是否可以删除
         baseMapper.deleteBatchIds(ids);
+    }
+
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = getParentPath(catelogId, paths);
+        Collections.reverse(parentPath);
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    private List<Long> getParentPath(Long catelogId, List<Long> paths) {
+        CategoryEntity byId = this.getById(catelogId);
+        if (byId == null) {
+            return paths;
+        }
+        //收集当前节点
+        paths.add(byId.getCatId());
+        if (byId.getParentCid() != 0) {
+            getParentPath(byId.getParentCid(), paths);
+        }
+        return paths;
     }
 
     /**

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.brandId ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
   >
@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="120px"
+      label-width="140px"
     >
       <el-form-item label="品牌名" prop="name">
         <el-input v-model="dataForm.name" placeholder="品牌名"></el-input>
@@ -28,8 +28,7 @@
           inactive-color="#ff4949"
           :active-value="1"
           :inactive-value="0"
-        >
-        </el-switch>
+        ></el-switch>
       </el-form-item>
       <el-form-item label="检索首字母" prop="firstLetter">
         <el-input
@@ -49,22 +48,11 @@
 </template>
 
 <script>
-//导入文件上传组件
 import SingleUpload from "@/components/upload/singleUpload";
 
 export default {
   components: {SingleUpload},
   data() {
-    //首字母校验方法
-    var firstLetterValidate = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("首字母必须填写"));
-      } else if (!/^[a-zA-Z]$/.test(value)) {
-        callback(new Error("首字母必须在a-z或者A-Z之间"));
-      } else {
-        callback();
-      }
-    };
     //排序字段校验方法
     var sortValidate = (rule, value, callback) => {
       if (value === "") {
@@ -101,8 +89,20 @@ export default {
             trigger: "blur",
           },
         ],
-        //使用自定义校验规则
-        firstLetter: [{validator: firstLetterValidate, trigger: "blur"}],
+        firstLetter: [
+          {
+            validator: (rule, value, callback) => {
+              if (value == "") {
+                callback(new Error("首字母必须填写"));
+              } else if (!/^[a-zA-Z]$/.test(value)) {
+                callback(new Error("首字母必须a-z或者A-Z之间"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur",
+          },
+        ],
         sort: [{validator: sortValidate, trigger: "blur"}],
       },
     };
