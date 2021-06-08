@@ -3,12 +3,10 @@ package com.wangli.gulimall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.wangli.gulimall.product.vo.AttrRespVo;
+import com.wangli.gulimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wangli.gulimall.product.entity.AttrEntity;
 import com.wangli.gulimall.product.service.AttrService;
@@ -30,6 +28,17 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+
+    //product/attr/sale/list/0?
+    ///product/attr/base/list/{catelogId}
+    @GetMapping("/base/list/{catelogId}")
+    public R baseAttrList(@RequestParam Map<String, Object> params,
+                          @PathVariable("catelogId") Long catelogId
+                          ){
+
+        PageUtils page = attrService.queryBaseAttrPage(params,catelogId);
+        return R.ok().put("page", page);
+    }
     /**
      * 列表
      */
@@ -46,17 +55,18 @@ public class AttrController {
      */
     @RequestMapping("/info/{attrId}")
     public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+        //AttrEntity attr = attrService.getById(attrId);
+        AttrRespVo respVo = attrService.getAttrInfo(attrId);
 
-        return R.ok().put("attr", attr);
+        return R.ok().put("attr", respVo);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@RequestBody AttrVo attr){
+        attrService.saveAttr(attr);
 
         return R.ok();
     }

@@ -7,8 +7,11 @@ import com.wangli.common.utils.PageUtils;
 import com.wangli.common.utils.Query;
 import com.wangli.gulimall.product.dao.CategoryDao;
 import com.wangli.gulimall.product.entity.CategoryEntity;
+import com.wangli.gulimall.product.service.CategoryBrandRelationService;
 import com.wangli.gulimall.product.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -39,6 +44,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         List<Long> parentPath = getParentPath(catelogId, paths);
         Collections.reverse(parentPath);
         return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    /**
+     * 级联更新所有关联的数据
+     *
+     * @param category
+     */
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
     private List<Long> getParentPath(Long catelogId, List<Long> paths) {
