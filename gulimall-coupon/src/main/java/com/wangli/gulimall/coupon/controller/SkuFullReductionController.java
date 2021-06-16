@@ -1,19 +1,15 @@
 package com.wangli.gulimall.coupon.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.wangli.gulimall.coupon.entity.SkuFullReductionEntity;
-import com.wangli.gulimall.coupon.service.SkuFullReductionService;
+import com.wangli.common.to.SkuReductionTo;
 import com.wangli.common.utils.PageUtils;
 import com.wangli.common.utils.R;
+import com.wangli.gulimall.coupon.entity.SkuFullReductionEntity;
+import com.wangli.gulimall.coupon.service.SkuFullReductionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -30,11 +26,18 @@ public class SkuFullReductionController {
     @Autowired
     private SkuFullReductionService skuFullReductionService;
 
+    @PostMapping("/saveinfo")
+    public R saveInfo(@RequestBody SkuReductionTo reductionTo) {
+
+        skuFullReductionService.saveSkuReduction(reductionTo);
+        return R.ok();
+    }
+
     /**
      * 列表
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = skuFullReductionService.queryPage(params);
 
         return R.ok().put("page", page);

@@ -10,6 +10,7 @@ import com.wangli.gulimall.product.service.AttrGroupService;
 import com.wangli.gulimall.product.service.AttrService;
 import com.wangli.gulimall.product.service.CategoryService;
 import com.wangli.gulimall.product.vo.AttrGroupRelationVo;
+import com.wangli.gulimall.product.vo.AttrGroupWithAttrsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +43,32 @@ public class AttrGroupController {
     @Autowired
     AttrAttrgroupRelationService relationService;
 
+    ///product/attrgroup/{catelogId}/withattr
+
+    /**
+     * 获取分类下所有分组&关联属性
+     *
+     * @param catelogId
+     * @return
+     */
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelogId) {
+
+        //1、查出当前分类下的所有属性分组，
+        //2、查出每个属性分组的所有属性
+        List<AttrGroupWithAttrsVo> vos = attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data", vos);
+    }
+
     @PostMapping("/attr/relation")
-    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos){
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos) {
 
         relationService.saveBatch(vos);
         return R.ok();
     }
 
     @GetMapping("/{attrgroupId}/attr/relation")
-    public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId){
+    public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId) {
         List<AttrEntity> entities =  attrService.getRelationAttr(attrgroupId);
         return R.ok().put("data",entities);
     }
