@@ -12,6 +12,16 @@ spring:
       routes:
         #前端项目发送请求时前缀都带上 /api
         #精确的路由规则放前面，不然会被模糊的规则先匹配
+
+        #仓库模块项目路由规则
+        - id: ware_route
+          uri: lb://gulimall-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            #作用，将/api/**重写为 /gulimall-admin/**
+            #          http://localhost:88/api/product/category/list ==>  http://localhost:10000/product/category/list
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
         #商品模块项目路由规则
         - id: product_route
           uri: lb://gulimall-product

@@ -1,11 +1,35 @@
-GET http://localhost:80/api/item?id=99
-Accept: application/json
+POST http://localhost:88/api/ware/purchase/done
+Content-Type: application/json
+
+{
+  "id": 4,
+  "items": [
+    {
+      "itemId": 5,
+      "status": 3,
+      "reason": ""
+    },
+    {
+      "itemId": 6,
+      "status": 3,
+      "reason": "无货"
+    },
+    {
+      "itemId": 7,
+      "status": 3,
+      "reason": ""
+    }
+  ]
+}
 
 ###
-GET http://localhost:88/api/product/attrgroup/list/1?page=1&key=content
+#接受采购单
+POST http://localhost:88/api/ware/purchase/received
+Content-Type: application/json
 
-
-
+[
+  4
+]
 
 ###
 POST http://localhost:88/api/product/brand/save

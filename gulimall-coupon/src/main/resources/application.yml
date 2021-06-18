@@ -8,7 +8,8 @@
 #    name: gulimall-coupon
 #  cloud:
 #    nacos:
-#      server-addr: 127.0.0.1:8848
+#      discovery:
+#        server-addr: 127.0.0.1:8848
 #mybatis-plus:
 ##  mapper文件扫描
 #  mapper-locations: classpath:/mapper/**/*.xml
