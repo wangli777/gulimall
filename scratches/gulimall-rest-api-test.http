@@ -1,3 +1,6 @@
+GET http://localhost:88/api/member/member/coupons
+
+###
 POST http://localhost:88/api/ware/purchase/done
 Content-Type: application/json
 

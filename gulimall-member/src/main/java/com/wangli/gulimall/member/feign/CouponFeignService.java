@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @description @FeignClient("gulimall-coupon") 的值是 服务名
  * 从 gulimall-coupon 服务中，调用coupon/coupon/member/list接口
  */
-@FeignClient(name = "gulimall-coupon", url = "http://localhost:7000/")
+@FeignClient(name = "gulimall-coupon")
 public interface CouponFeignService {
 
     @RequestMapping("coupon/coupon/member/list")
