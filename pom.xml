@@ -20,6 +20,41 @@
         <module>gulimall-common</module>
         <module>gulimall-gateway</module>
         <module>gulimall-third-party</module>
+        <module>gulimall-search</module>
     </modules>
+    <!--  这里的属性会被子模块继承  -->
+    <properties>
+        <spring.boot.version>2.1.8.RELEASE</spring.boot.version>
+
+        <elasticsearch.version>7.4.2</elasticsearch.version>
+    </properties>
+    <!--  子模块继承父模块之后，提供作用：锁定版本 + 子模块不用再写 version  -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- 重写覆盖 spring-boot-dependencies 中的依赖版本  -->
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

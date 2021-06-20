@@ -9,9 +9,9 @@
 	<description>后台管理系统</description>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.8.RELEASE</version>
+		<groupId>com.wangli.gulimall</groupId>
+		<artifactId>gulimall</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
