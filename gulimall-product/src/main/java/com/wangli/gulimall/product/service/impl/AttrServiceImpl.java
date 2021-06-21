@@ -1,15 +1,22 @@
 package com.wangli.gulimall.product.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wangli.common.constant.ProductConstant;
+import com.wangli.common.utils.PageUtils;
+import com.wangli.common.utils.Query;
 import com.wangli.gulimall.product.dao.AttrAttrgroupRelationDao;
+import com.wangli.gulimall.product.dao.AttrDao;
 import com.wangli.gulimall.product.dao.AttrGroupDao;
 import com.wangli.gulimall.product.dao.CategoryDao;
 import com.wangli.gulimall.product.entity.AttrAttrgroupRelationEntity;
+import com.wangli.gulimall.product.entity.AttrEntity;
 import com.wangli.gulimall.product.entity.AttrGroupEntity;
 import com.wangli.gulimall.product.entity.CategoryEntity;
+import com.wangli.gulimall.product.service.AttrService;
 import com.wangli.gulimall.product.service.CategoryService;
 import com.wangli.gulimall.product.vo.AttrGroupRelationVo;
 import com.wangli.gulimall.product.vo.AttrRespVo;
@@ -17,21 +24,11 @@ import com.wangli.gulimall.product.vo.AttrVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wangli.common.utils.PageUtils;
-import com.wangli.common.utils.Query;
-
-import com.wangli.gulimall.product.dao.AttrDao;
-import com.wangli.gulimall.product.entity.AttrEntity;
-import com.wangli.gulimall.product.service.AttrService;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 
 @Service("attrService")
@@ -243,7 +240,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         String key = (String) params.get("key");
         if(!StringUtils.isEmpty(key)){
             wrapper.and((w)->{
-                w.eq("attr_id",key).or().like("attr_name",key);
+                w.eq("attr_id", key).or().like("attr_name", key);
             });
         }
         IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(params), wrapper);
@@ -251,6 +248,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         PageUtils pageUtils = new PageUtils(page);
 
         return pageUtils;
+    }
+
+    @Override
+    public List<Long> selectSearchAttrs(List<Long> attrIds) {
+        return this.baseMapper.selectSearchAttrIds(attrIds);
     }
 
 }
