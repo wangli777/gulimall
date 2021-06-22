@@ -8,6 +8,8 @@
 
 package com.wangli.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
@@ -24,6 +26,26 @@ public class R extends HashMap<String, Object> {
     public R() {
         put("code", 0);
         put("msg", "success");
+    }
+
+    public R setData(Object data) {
+        put("data", data);
+        return this;
+    }
+
+    // 利用fastjson进行反序列化 <T> 是声明泛型
+    public <T> T getData(TypeReference<T> typeReference) {
+        // 默认是map
+        Object data = get("data");
+        return JSON.parseObject(JSON.toJSONString(data), typeReference);
+    }
+
+    // 利用fastjson进行反序列化
+    public <T> T getData(String key, TypeReference<T> typeReference) {
+        // 默认是map
+        Object data = get(key);
+        String jsonString = JSON.toJSONString(data);
+        return JSON.parseObject(jsonString, typeReference);
     }
 
     public static R error() {
