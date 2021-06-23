@@ -57,3 +57,9 @@ spring:
             # 作用，将/api/**重写为 /gulimall-admin/**
             # http://localhost:88/api/captcha.jpg ==> http://localhost:8080/gulimall-admin/captcha.jpg
             - RewritePath=/api/(?<segment>.*),/gulimall-admin/$\{segment}
+
+        #商城首页nginx路由规则
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=**.mall.com
