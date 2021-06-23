@@ -1,4 +1,4 @@
-package com.wangli.gulimall.product.controller;
+package com.wangli.gulimall.product.app;
 
 import cn.hutool.json.JSONUtil;
 import com.wangli.common.utils.PageUtils;

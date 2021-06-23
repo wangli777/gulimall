@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 传输对象，存储到es的数据
+ * 存储到es的商品数据实体
  *
  * @Author: WangLi
  * @Date: 2021/6/21

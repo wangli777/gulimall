@@ -3,6 +3,7 @@ package com.wangli.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wangli.common.utils.PageUtils;
 import com.wangli.gulimall.product.entity.CategoryEntity;
+import com.wangli.gulimall.product.vo.web.Catalog2Vo;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,10 @@ public interface CategoryService extends IService<CategoryEntity> {
      */
     List<CategoryEntity> listWithTree();
 
+    /**
+     * 批量删除
+     * @param ids
+     */
     void removeMenusByIds(List<Long> ids);
 
     /**
@@ -35,6 +40,23 @@ public interface CategoryService extends IService<CategoryEntity> {
      */
     Long[] findCatelogPath(Long catelogId);
 
+    /**
+     * 级联更新所有关联的数据
+     * @param category
+     */
     void updateCascade(CategoryEntity category);
+
+    /**
+     * 查询一级分类
+     * @return
+     */
+    List<CategoryEntity> listLevel1Cates();
+
+    /**
+     * 按首页分类要求查出 二级、三级分类数据
+     * @return
+     */
+    Map<String, List<Catalog2Vo>> getCatalogJson();
+
 }
 

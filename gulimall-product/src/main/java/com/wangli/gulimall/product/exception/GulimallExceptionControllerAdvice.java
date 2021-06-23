@@ -19,7 +19,7 @@ import java.util.Map;
 //@ControllerAdvice
 //@ResponseBody
 @Slf4j
-@RestControllerAdvice(basePackages = "com.wangli.gulimall.product.controller")
+@RestControllerAdvice(basePackages = "com.wangli.gulimall.product.app")
 public class GulimallExceptionControllerAdvice {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

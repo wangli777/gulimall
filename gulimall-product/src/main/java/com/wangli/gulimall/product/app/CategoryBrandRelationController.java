@@ -1,4 +1,4 @@
-package com.wangli.gulimall.product.controller;
+package com.wangli.gulimall.product.app;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wangli.common.utils.R;

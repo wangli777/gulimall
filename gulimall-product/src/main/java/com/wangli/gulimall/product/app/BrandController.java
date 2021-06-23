@@ -1,4 +1,4 @@
-package com.wangli.gulimall.product.controller;
+package com.wangli.gulimall.product.app;
 
 import com.wangli.common.utils.PageUtils;
 import com.wangli.common.utils.R;
