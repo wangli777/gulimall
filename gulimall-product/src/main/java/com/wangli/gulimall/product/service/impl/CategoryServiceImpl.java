@@ -66,18 +66,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJson() {
-        //一级分类
-        List<CategoryEntity> level1Cates = this.listLevel1Cates();
+
+        // 性能优化：将数据库的多次查询变为一次
+        List<CategoryEntity> selectList = this.baseMapper.selectList(null);
+        //1、1）查出所有一级分类
+        List<CategoryEntity> level1Cates = getParentCid(selectList, 0L);
         Map<String, List<Catalog2Vo>> listMap = level1Cates.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
             //二级分类
-            List<CategoryEntity> level2Cates = this.baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+            List<CategoryEntity> level2Cates = getParentCid(selectList, v.getCatId());
             List<Catalog2Vo> catalogs2Vos = null;
             if (level2Cates != null) {
                 //将二级分类转为 Catalog2Vo
                 catalogs2Vos = level2Cates.stream().map(l2 -> {
                     Catalog2Vo catalog2Vo = new Catalog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
                     //查出三级分类
-                    List<CategoryEntity> level3 = this.baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", l2.getCatId()));
+                    List<CategoryEntity> level3 = getParentCid(selectList, l2.getCatId());
                     if (level3 != null) {
                         List<Catalog2Vo.Category3Vo> category3Vos = level3.stream().map(l3 -> {
                             Catalog2Vo.Category3Vo category3Vo = new Catalog2Vo.Category3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
@@ -92,6 +95,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return catalogs2Vos;
         }));
         return listMap;
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList, Long parentCid) {
+        return selectList.stream().filter(item -> item.getParentCid().equals(parentCid)).collect(Collectors.toList());
     }
 
     private List<Long> getParentPath(Long catelogId, List<Long> paths) {
