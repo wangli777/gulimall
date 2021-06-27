@@ -1,26 +1,44 @@
 package com.wangli.gulimall.product;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wangli.gulimall.product.entity.BrandEntity;
 import com.wangli.gulimall.product.service.BrandService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-
+@Slf4j
 public class GulimallProductApplicationTests {
 
     @Autowired
     BrandService brandService;
-//    @Autowired
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
+
+    //    @Autowired
 //    OSSClient ossClient;
 //
+    @Test
+    public void testRedis() {
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set("hello", "Wolrd_" + UUID.randomUUID().toString());
+
+        String hello = ops.get("hello");
+        log.info("之前设置到redis中的值为：{}", hello);
+    }
+
+
 //    @Test
 //    public void testUpload1() throws FileNotFoundException {
 //
