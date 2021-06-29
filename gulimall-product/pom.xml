@@ -39,6 +39,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!--redis starter-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -50,9 +51,17 @@
             </exclusions>
         </dependency>
 
+        <!--    jedis客户端    -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
+        </dependency>
+
+        <!--    redisson客户端 作为分布式锁，分布式对象等的功能框架   -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.12.0</version>
         </dependency>
 
     </dependencies>
