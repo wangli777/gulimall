@@ -60,13 +60,5 @@ public interface CategoryService extends IService<CategoryEntity> {
      */
     Map<String, List<Catalog2Vo>> getCatalogJson();
 
-    /**
-     * 按首页分类要求查出 二级、三级分类数据
-     * 从数据库查询并封装数据 使用分布式锁
-     *
-     * @return
-     */
-    Map<String, List<Catalog2Vo>> getCatalogJsonWithRedisLock();
-
 }
 
