@@ -19,6 +19,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *
      * @param category
      */
-    @CacheEvict(value = {"category"}, key = "'listLevel1Cates'")
+    @Caching(evict = {
+            @CacheEvict(value = {"category"}, key = "'listLevel1Cates'"),
+            @CacheEvict(value = {"category"}, key = "'getCatalogJson'")
+    })
+//    @CacheEvict(value = {"category"}, allEntries = true)
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -81,7 +86,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     //代表当前方法的结果需要缓存，如果缓存中有，不需要执行方法，如果缓存中没有，则需要执行方法，并将方法执行结果放入缓存
     //每一个需要缓存的数据，我们都需要指定一个名字用来分区。【缓存的分区（一般按照业务类型分）】
 //    @Cacheable(value = {"category"}, key = "'level1Cates'")
-    @Cacheable(value = {"category"}, key = "#root.methodName")
+    @Cacheable(value = {"category"}, key = "#root.methodName", sync = true)
     @Override
     public List<CategoryEntity> listLevel1Cates() {
         log.debug("执行listLevel1Cates...");
@@ -89,12 +94,54 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     }
 
     /**
-     * 使用本地锁获取数据
+     * 获取分类数据 使用Spring-Cache纯注解方式
+     * 功能同 getCatalogJsonByHand()
      *
      * @return
      */
+    @Cacheable(value = {"category"}, key = "#root.methodName", sync = true)
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJson() {
+        log.warn("真正查询数据库...");
+        // 性能优化：将数据库的多次查询变为一次
+        List<CategoryEntity> selectList = this.baseMapper.selectList(null);
+        //1、1）查出所有一级分类
+        List<CategoryEntity> level1Cates = getParentCid(selectList, 0L);
+        Map<String, List<Catalog2Vo>> listMap = level1Cates.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            //二级分类
+            List<CategoryEntity> level2Cates = getParentCid(selectList, v.getCatId());
+            List<Catalog2Vo> catalogs2Vos = new ArrayList<>();
+            if (level2Cates != null) {
+                //将二级分类转为 Catalog2Vo
+                catalogs2Vos = level2Cates.stream().map(l2 -> {
+                    Catalog2Vo catalog2Vo = new Catalog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+                    //查出三级分类
+                    List<CategoryEntity> level3 = getParentCid(selectList, l2.getCatId());
+                    if (level3 != null) {
+                        List<Catalog2Vo.Category3Vo> category3Vos = level3.stream().map(l3 -> {
+                            Catalog2Vo.Category3Vo category3Vo = new Catalog2Vo.Category3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
+                            return category3Vo;
+                        }).collect(Collectors.toList());
+                        catalog2Vo.setCatalog3List(category3Vos);
+                    }
+                    return catalog2Vo;
+                }).collect(Collectors.toList());
+            }
+
+            return catalogs2Vos;
+        }));
+
+        return listMap;
+    }
+
+    /**
+     * 获取分类数据 使用手动编码方式
+     * 功能同 getCatalogJson()
+     *
+     * @return
+     */
+//    @Override
+    public Map<String, List<Catalog2Vo>> getCatalogJsonByHand() {
         //1、缓存空数据（缓存穿透）
         //2、设置随机过期时间（缓存雪崩）
         //3、查询数据库时加锁（缓存击穿）

@@ -28,9 +28,9 @@ spring:
   cache:
     type: redis
     redis:
-      time-to-live: 60000
+      time-to-live: 600000
       cache-null-values: true
-      key-prefix: CACHE_
+      #      key-prefix: CACHE_
       use-key-prefix: true
 mybatis-plus:
 #  mapper文件扫描
