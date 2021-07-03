@@ -17,6 +17,8 @@ import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -64,9 +66,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 级联更新所有关联的数据
+     * 更新时删除缓存
      *
      * @param category
      */
+    @CacheEvict(value = {"category"}, key = "'listLevel1Cates'")
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -74,8 +78,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
+    //代表当前方法的结果需要缓存，如果缓存中有，不需要执行方法，如果缓存中没有，则需要执行方法，并将方法执行结果放入缓存
+    //每一个需要缓存的数据，我们都需要指定一个名字用来分区。【缓存的分区（一般按照业务类型分）】
+//    @Cacheable(value = {"category"}, key = "'level1Cates'")
+    @Cacheable(value = {"category"}, key = "#root.methodName")
     @Override
     public List<CategoryEntity> listLevel1Cates() {
+        log.debug("执行listLevel1Cates...");
         return this.baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
     }
 
