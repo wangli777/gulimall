@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -17,7 +17,7 @@
     <div class="header_head_box">
         <b class="header_head_p">
             <div style="overflow: hidden">
-                <a href="/static/search/#" class="header_head_p_a1" style="width:73px;">
+                <a href="http://mall.com" class="header_head_p_a1" style="width:73px;">
                     谷粒商城首页
                 </a>
                 <a href="/static/search/#" class="header_head_p_a">
@@ -399,7 +399,7 @@
 <!--搜索导航-->
 <div class="header_sous">
     <div class="logo">
-        <a href="/static/search/#"><img src="/static/search/./image/logo1.jpg" alt=""></a>
+        <a href="http://mall.com"><img src="/static/search/./image/logo1.jpg" alt=""></a>
     </div>
     <div class="header_form">
         <input type="text" placeholder="手机" />
@@ -3553,13 +3553,13 @@
         $(this).children("span").stop(true).animate({top:"14px"},100);
         $(this).children("i").stop(true).animate({top:"-1px"},100).css({display:"block"})
     });
-    $('.tab_im img').hover(function(){
-        var a=$(this).prop('src');
-        var index=$(this).parents('li').index();
-        $(this).parents('li').css('border','2px solid red').siblings('li').css('border','1px solid #ccc');
-        $(this).parents('ul').prev().find('img').prop('src',a);
-        $(this).parents('ul').siblings('.tab_JE').find('a').eq(index).css('display','block').siblings('a').css('display','none');
-        $(this).parents('ul').siblings('.tab_R').find('span').eq(index).css('display','block').siblings('span').css('display','none')
+    $('.tab_im img').hover(function() {
+        var a = $(this).prop('src');
+        var index = $(this).parents('li').index();
+        $(this).parents('li').css('border', '2px solid red').siblings('li').css('border', '1px solid #ccc');
+        $(this).parents('ul').prev().find('img').prop('src', a);
+        $(this).parents('ul').siblings('.tab_JE').find('a').eq(list).css('display', 'block').siblings('a').css('display', 'none');
+        $(this).parents('ul').siblings('.tab_R').find('span').eq(list).css('display', 'block').siblings('span').css('display', 'none')
     });
 
     $(".JD_ipone_one").hover(function(){
