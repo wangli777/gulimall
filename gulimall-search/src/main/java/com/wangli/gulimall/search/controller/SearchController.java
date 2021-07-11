@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author WangLi
@@ -21,9 +22,9 @@ public class SearchController {
     MallSearchService mallSearchService;
 
     @GetMapping("/list.html")
-    public String listPage(SearchParam searchParam, Model model) {
+    public String listPage(SearchParam searchParam, Model model, HttpServletRequest request) {
+        searchParam.set_queryString(request.getQueryString());
         SearchResult result = mallSearchService.search(searchParam);
-
         model.addAttribute("result", result);
         return "list";
     }

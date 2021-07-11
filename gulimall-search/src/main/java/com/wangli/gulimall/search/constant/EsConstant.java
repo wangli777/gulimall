@@ -10,5 +10,5 @@ public class EsConstant {
      * sku数据在es中的索引
      */
     public static final String PRODUCT_INDEX = "mall_product";
-    public static final int PRODUCT_PAGESIZE = 10;
+    public static final int PRODUCT_PAGESIZE = 16;
 }
