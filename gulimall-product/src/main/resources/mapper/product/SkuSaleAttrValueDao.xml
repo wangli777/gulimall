@@ -3,7 +3,7 @@
 
 <mapper namespace="com.wangli.gulimall.product.dao.SkuSaleAttrValueDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.wangli.gulimall.product.entity.SkuSaleAttrValueEntity" id="skuSaleAttrValueMap">
         <result property="id" column="id"/>
         <result property="skuId" column="sku_id"/>
@@ -12,6 +12,33 @@
         <result property="attrValue" column="attr_value"/>
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
+
+    <resultMap id="skuItemSaleAttrVo" type="com.wangli.gulimall.product.vo.web.SkuItemSaleAttrVo">
+        <result column="attr_id" property="attrId"/>
+        <result column="attr_name" property="attrName"/>
+        <collection property="attrValues" ofType="com.wangli.gulimall.product.vo.web.AttrValueWithSkuIdVo">
+            <result column="attr_value" property="attrValue"/>
+            <result column="sku_ids" property="skuIds"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSaleAttrBySpuId" resultMap="skuItemSaleAttrVo">
+        SELECT
+            ssav.attr_id attr_id,
+            ssav.attr_name attr_name,
+            ssav.attr_value,
+            group_concat( DISTINCT info.sku_id ) sku_ids
+        FROM
+            pms_sku_info info
+                LEFT JOIN pms_sku_sale_attr_value ssav ON ssav.sku_id = info.sku_id
+        WHERE
+            info.spu_id = #{spuId}
+        GROUP BY
+            ssav.attr_id,
+            ssav.attr_name,
+            ssav.attr_value
+
+    </select>
 
 
 </mapper>

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.wangli.gulimall.product.dao.AttrGroupDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.wangli.gulimall.product.entity.AttrGroupEntity" id="attrGroupMap">
         <result property="attrGroupId" column="attr_group_id"/>
         <result property="attrGroupName" column="attr_group_name"/>
@@ -12,6 +12,34 @@
         <result property="icon" column="icon"/>
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
+    <resultMap id="spuAttrGroup" type="com.wangli.gulimall.product.vo.web.SpuItemAttrGroupVo">
+        <result column="attr_group_name" property="groupName"/>
+        <collection property="attrs" ofType="com.wangli.gulimall.product.vo.spusave.Attr">
+            <result column="attr_id" property="attrId"/>
+            <result column="attr_name" property="attrName"/>
+            <result column="attr_value" property="attrValue"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAttrGroupWithAttrsBySpuId"
+            resultMap="spuAttrGroup">
+
+        SELECT
+            product.spu_id,
+            pag.attr_group_id,
+            pag.attr_group_name,
+            product.attr_id,
+            product.attr_name,
+            product.attr_value
+        FROM
+            pms_product_attr_value product
+                LEFT JOIN pms_attr_attrgroup_relation paar ON product.attr_id = paar.attr_id
+                LEFT JOIN pms_attr_group pag ON paar.attr_group_id = pag.attr_group_id
+        WHERE
+            product.spu_id = #{spuId}
+          AND pag.catelog_id = #{catalogId}
+
+    </select>
 
 
 </mapper>

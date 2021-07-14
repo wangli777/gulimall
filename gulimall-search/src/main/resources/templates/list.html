@@ -1192,7 +1192,8 @@
                                 <a href="/static/search/#">关注</a>
                             </div>
                             <p class="da">
-                                <a href="/static/search/#">
+                                <!-- 动态获取skuId -->
+                                <a th:href="|http://item.mall.com/${product.skuId}.html|">
                                     <img th:src="${product.skuImg}" class="dim">
                                 </a>
                             </p>

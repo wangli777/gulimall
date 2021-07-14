@@ -62,7 +62,7 @@ spring:
         - id: gulimall_host_route
           uri: lb://gulimall-product
           predicates:
-            - Host=mall.com
+            - Host=mall.com,item.mall.com
 
         #商城搜索模块nginx路由规则
         - id: gulimall_search_route
