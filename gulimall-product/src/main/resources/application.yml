@@ -46,3 +46,8 @@ server:
 logging:
   level:
     com.wangli.gulimall.product: debug
+mall:
+  thread:
+    core-size: 50
+    max-size: 200
+    keep-alive-time: 10
