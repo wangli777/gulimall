@@ -69,3 +69,9 @@ spring:
           uri: lb://gulimall-search
           predicates:
             - Host=search.mall.com
+
+        #认证服务模块路由规则
+        - id: gulimall_auth_route
+          uri: lb://gulimall-auth-server
+          predicates:
+            - Host=auth.mall.com

@@ -21,6 +21,7 @@
         <module>gulimall-gateway</module>
         <module>gulimall-third-party</module>
         <module>gulimall-search</module>
+        <module>gulimall-auth-server</module>
     </modules>
     <!--  这里的属性会被子模块继承  -->
     <properties>
@@ -29,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gulimall-common.version>0.0.1-SNAPSHOT</gulimall-common.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
-        <lombok.version>1.18.18</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <mysql.version>8.0.23</mysql.version>
         <http.components.version>4.4.13</http.components.version>
         <commons.lang.version>2.6</commons.lang.version>
