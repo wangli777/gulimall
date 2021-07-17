@@ -3,6 +3,7 @@ package com.wangli.gulimall.thirdparty;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.wangli.gulimall.thirdparty.service.SmsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,15 @@ public class GulimallThirdPartyApplicationTests {
 
 	@Autowired
 	OSS ossClient;
+	@Autowired
+	SmsService smsService;
+
+
+
+	@Test
+	public void testSendSms() {
+		smsService.sendSms("18079960897","999999");
+	}
 
 	@Test
 	public void testUpload1() throws FileNotFoundException {
