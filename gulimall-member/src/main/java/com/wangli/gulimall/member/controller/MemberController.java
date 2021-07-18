@@ -3,13 +3,13 @@ package com.wangli.gulimall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.wangli.common.exception.BizCodeEnum;
+import com.wangli.gulimall.member.exception.PhoneException;
+import com.wangli.gulimall.member.exception.UsernameException;
 import com.wangli.gulimall.member.feign.CouponFeignService;
+import com.wangli.gulimall.member.vo.MemberUserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wangli.gulimall.member.entity.MemberEntity;
 import com.wangli.gulimall.member.service.MemberService;
@@ -33,6 +33,19 @@ public class MemberController {
 
     @Autowired
     private CouponFeignService couponFeignService;
+
+    @PostMapping("/register")
+    public R register(@RequestBody MemberUserRegisterVo registerVo) {
+
+        try {
+            memberService.register(registerVo);
+        } catch (UsernameException e) {
+            return R.error(BizCodeEnum.USER_EXIST_EXCEPTION.getCode(), BizCodeEnum.USER_EXIST_EXCEPTION.getMsg());
+        } catch (PhoneException e) {
+            return R.error(BizCodeEnum.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnum.PHONE_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
 
     /**
      * 远程调用 gulimall-coupon 模块的接口
