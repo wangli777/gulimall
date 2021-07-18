@@ -7,6 +7,7 @@ import com.wangli.common.exception.BizCodeEnum;
 import com.wangli.gulimall.member.exception.PhoneException;
 import com.wangli.gulimall.member.exception.UsernameException;
 import com.wangli.gulimall.member.feign.CouponFeignService;
+import com.wangli.gulimall.member.vo.MemberUserLoginVo;
 import com.wangli.gulimall.member.vo.MemberUserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,17 @@ public class MemberController {
             return R.error(BizCodeEnum.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnum.PHONE_EXIST_EXCEPTION.getMsg());
         }
         return R.ok();
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemberUserLoginVo loginVo) {
+
+        MemberEntity memberEntity = memberService.login(loginVo);
+        if (memberEntity == null) {
+            return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(),BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMsg());
+        }else{
+            return R.ok().setData(memberEntity);
+        }
     }
 
     /**

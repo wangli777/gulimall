@@ -1,11 +1,13 @@
 package com.wangli.gulimall.auth.controller;
 
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.collect.Maps;
 import com.wangli.common.constant.AuthServerConstant;
 import com.wangli.common.exception.BizCodeEnum;
 import com.wangli.common.utils.R;
 import com.wangli.gulimall.auth.feign.MemberFeignService;
 import com.wangli.gulimall.auth.feign.ThirdPartyFeignService;
+import com.wangli.gulimall.auth.vo.UserLoginVo;
 import com.wangli.gulimall.auth.vo.UserRegisterVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +136,25 @@ public class LoginController {
             errors.put("code", "验证码错误");
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:http://auth.mall.com/reg.html";
+        }
+    }
+
+    @PostMapping("/login")
+    public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes) {
+        //调用远程登录服务
+        R result = memberFeignService.login(loginVo);
+
+        if (result.getCode() == 0) {
+            //登录成功
+            return "redirect:http://mall.com";
+
+        }else{
+            //登录失败
+            HashMap<Object, Object> errors = Maps.newHashMap();
+            errors.put("msg",result.getData("msg",new TypeReference<String>(){}));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:http://auth.mall.com/login.html";
+
         }
     }
 

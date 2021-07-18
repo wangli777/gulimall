@@ -4,6 +4,7 @@ import com.wangli.gulimall.member.dao.MemberLevelDao;
 import com.wangli.gulimall.member.entity.MemberLevelEntity;
 import com.wangli.gulimall.member.exception.PhoneException;
 import com.wangli.gulimall.member.exception.UsernameException;
+import com.wangli.gulimall.member.vo.MemberUserLoginVo;
 import com.wangli.gulimall.member.vo.MemberUserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -62,6 +63,23 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         memberEntity.setPassword(encode);
 
         this.baseMapper.insert(memberEntity);
+    }
+
+    @Override
+    public MemberEntity login(MemberUserLoginVo loginVo) {
+        MemberEntity memberEntity = this.baseMapper.selectOne(new QueryWrapper<MemberEntity>().eq("username", loginVo.getLoginacct()).or().eq("mobile", loginVo.getLoginacct()));
+
+        if (memberEntity == null) {
+            return null;
+
+        } else {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            boolean matches = passwordEncoder.matches(loginVo.getPassword(), memberEntity.getPassword());
+            if (matches) {
+                return memberEntity;
+            }
+        }
+        return null;
     }
 
     /**
