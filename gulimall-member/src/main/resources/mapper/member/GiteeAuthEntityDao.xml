@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangli.gulimall.member.dao.GiteeAuthEntityDao">
+
+    <resultMap id="BaseResultMap" type="com.wangli.gulimall.member.entity.GiteeAuthEntity">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="version" column="version" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="giteeUserId" column="gitee_user_id" jdbcType="BIGINT"/>
+            <result property="memberId" column="member_id" jdbcType="BIGINT"/>
+            <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
+            <result property="accessToken" column="access_token" jdbcType="VARCHAR"/>
+            <result property="tokenType" column="token_type" jdbcType="VARCHAR"/>
+            <result property="expiresIn" column="expires_in" jdbcType="INTEGER"/>
+            <result property="refreshToken" column="refresh_token" jdbcType="VARCHAR"/>
+            <result property="scope" column="scope" jdbcType="VARCHAR"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,version,create_time,
+        update_time,gitee_user_id,login_name,nick_name,avatar_url,access_token,token_type,
+        expires_in,refresh_token,scope,
+        created_at
+    </sql>
+</mapper>

@@ -1,6 +1,9 @@
 package com.wangli.gulimall.member.service.impl;
 
+import com.wangli.gulimall.member.dao.GiteeAuthEntityDao;
 import com.wangli.gulimall.member.dao.MemberLevelDao;
+import com.wangli.gulimall.member.dto.GiteeTokenDto;
+import com.wangli.gulimall.member.entity.GiteeAuthEntity;
 import com.wangli.gulimall.member.entity.MemberLevelEntity;
 import com.wangli.gulimall.member.exception.PhoneException;
 import com.wangli.gulimall.member.exception.UsernameException;
@@ -29,6 +32,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     @Autowired
     MemberLevelDao memberLevelDao;
+
+    @Autowired
+    GiteeAuthEntityDao giteeAuthDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -80,6 +86,21 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             }
         }
         return null;
+    }
+
+    @Override
+    public MemberEntity login(GiteeTokenDto token) {
+
+        MemberEntity memberEntity = null;
+        
+        GiteeAuthEntity giteeAuthEntity = giteeAuthDao.selectOne(new QueryWrapper<GiteeAuthEntity>().eq("gitee_user_id", token.getGiteeUserId()));
+        if (giteeAuthEntity == null) {
+            //首次登录，自动注册
+            // TODO: 2021/7/22  
+        }else {
+            memberEntity = this.getById(giteeAuthEntity.getMemberId());
+        }
+        return memberEntity;
     }
 
     /**

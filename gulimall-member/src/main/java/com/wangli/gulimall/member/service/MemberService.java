@@ -2,6 +2,7 @@ package com.wangli.gulimall.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wangli.common.utils.PageUtils;
+import com.wangli.gulimall.member.dto.GiteeTokenDto;
 import com.wangli.gulimall.member.entity.MemberEntity;
 import com.wangli.gulimall.member.vo.MemberUserLoginVo;
 import com.wangli.gulimall.member.vo.MemberUserRegisterVo;
@@ -22,5 +23,12 @@ public interface MemberService extends IService<MemberEntity> {
     void register(MemberUserRegisterVo registerVo);
 
     MemberEntity login(MemberUserLoginVo loginVo);
+
+    /**
+     * gitee登录
+     * @param token
+     * @return
+     */
+    MemberEntity login(GiteeTokenDto token);
 }
 

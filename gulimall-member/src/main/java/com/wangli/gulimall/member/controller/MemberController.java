@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.wangli.common.exception.BizCodeEnum;
+import com.wangli.gulimall.member.dto.GiteeTokenDto;
 import com.wangli.gulimall.member.exception.PhoneException;
 import com.wangli.gulimall.member.exception.UsernameException;
 import com.wangli.gulimall.member.feign.CouponFeignService;
@@ -52,6 +53,17 @@ public class MemberController {
     public R login(@RequestBody MemberUserLoginVo loginVo) {
 
         MemberEntity memberEntity = memberService.login(loginVo);
+        if (memberEntity == null) {
+            return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(),BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMsg());
+        }else{
+            return R.ok().setData(memberEntity);
+        }
+    }
+
+    @PostMapping("/gitee/login")
+    public R login(@RequestBody GiteeTokenDto token) {
+
+        MemberEntity memberEntity = memberService.login(token);
         if (memberEntity == null) {
             return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(),BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMsg());
         }else{

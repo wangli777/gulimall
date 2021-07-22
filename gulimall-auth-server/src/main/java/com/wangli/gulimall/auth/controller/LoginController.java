@@ -9,12 +9,12 @@ import com.wangli.gulimall.auth.feign.MemberFeignService;
 import com.wangli.gulimall.auth.feign.ThirdPartyFeignService;
 import com.wangli.gulimall.auth.vo.UserLoginVo;
 import com.wangli.gulimall.auth.vo.UserRegisterVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author WangLi
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
  * @description 登录注册
  */
 @Controller
+@Slf4j
 public class LoginController {
 
     @Autowired
@@ -114,15 +114,16 @@ public class LoginController {
                 R result = memberFeignService.register(registerVo);
                 if (result.getCode() == 0) {
                     return "redirect:http://auth.mall.com/login.html";
-                }else {
+                } else {
                     //失败
                     Map<String, String> errors = new HashMap<>();
-                    errors.put("msg", result.getData("msg",new TypeReference<String>(){}));
-                    redirectAttributes.addFlashAttribute("errors",errors);
+                    errors.put("msg", result.getData("msg", new TypeReference<String>() {
+                    }));
+                    redirectAttributes.addFlashAttribute("errors", errors);
                     return "redirect:http://auth.mall.com/reg.html";
                 }
 
-            }else {
+            } else {
                 //效验出错回到注册页面
                 Map<String, String> errors = new HashMap<>();
                 errors.put("code", "验证码错误");
@@ -148,10 +149,11 @@ public class LoginController {
             //登录成功
             return "redirect:http://mall.com";
 
-        }else{
+        } else {
             //登录失败
             HashMap<Object, Object> errors = Maps.newHashMap();
-            errors.put("msg",result.getData("msg",new TypeReference<String>(){}));
+            errors.put("msg", result.getData("msg", new TypeReference<String>() {
+            }));
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:http://auth.mall.com/login.html";
 
