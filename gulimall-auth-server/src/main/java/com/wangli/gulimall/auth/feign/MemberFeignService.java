@@ -1,6 +1,7 @@
 package com.wangli.gulimall.auth.feign;
 
 import com.wangli.common.utils.R;
+import com.wangli.gulimall.auth.dto.GiteeTokenDto;
 import com.wangli.gulimall.auth.vo.UserLoginVo;
 import com.wangli.gulimall.auth.vo.UserRegisterVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,4 +21,7 @@ public interface MemberFeignService {
 
     @PostMapping("/member/member/login")
     R login(UserLoginVo loginVo);
+
+    @PostMapping("/member/member/gitee/login")
+    R login(GiteeTokenDto token);
 }

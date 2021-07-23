@@ -9,6 +9,7 @@ import com.wangli.gulimall.auth.feign.MemberFeignService;
 import com.wangli.gulimall.auth.feign.ThirdPartyFeignService;
 import com.wangli.gulimall.auth.vo.UserLoginVo;
 import com.wangli.gulimall.auth.vo.UserRegisterVo;
+import com.wangli.gulimall.auth.vo.resp.MemberRespVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -141,12 +143,15 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes) {
+    public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes, HttpSession session) {
         //调用远程登录服务
         R result = memberFeignService.login(loginVo);
 
         if (result.getCode() == 0) {
             //登录成功
+            MemberRespVo data = result.getData(new TypeReference<MemberRespVo>() {
+            });
+            session.setAttribute("loginUser", data);
             return "redirect:http://mall.com";
 
         } else {

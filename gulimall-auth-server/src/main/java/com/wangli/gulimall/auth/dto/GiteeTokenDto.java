@@ -12,6 +12,25 @@ import lombok.NoArgsConstructor;
 @Data
 public class GiteeTokenDto {
 
+    /**
+     * gitee用户唯一id
+     */
+    private Long giteeUserId;
+    /**
+     * login
+     */
+    private String loginName;
+    /**
+     * name
+     */
+    private String nickName;
+    /**
+     * avatar_url
+     */
+    private String avatarUrl;
+
+
+
 
     /**
      * accessToken

@@ -1,5 +1,11 @@
 package com.wangli.gulimall.member.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Maps;
 import com.wangli.gulimall.member.dao.GiteeAuthEntityDao;
 import com.wangli.gulimall.member.dao.MemberLevelDao;
 import com.wangli.gulimall.member.dto.GiteeTokenDto;
@@ -25,6 +31,7 @@ import com.wangli.common.utils.Query;
 import com.wangli.gulimall.member.dao.MemberDao;
 import com.wangli.gulimall.member.entity.MemberEntity;
 import com.wangli.gulimall.member.service.MemberService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("memberService")
@@ -88,19 +95,57 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         return null;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public MemberEntity login(GiteeTokenDto token) {
+        MemberEntity member;
 
-        MemberEntity memberEntity = null;
-        
+        if (token == null) {
+            return null;
+        }
+        //先查询获取授权用户的资料 https://gitee.com/api/v5/swagger#/getV5User
+        //主要是获取gitee用户唯一id
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("access_token", token.getAccessToken());
+        String userInfo = HttpUtil.get("https://gitee.com/api/v5/user", map);
+        JSONObject jsonObject = JSONUtil.parseObj(userInfo);
+        if (jsonObject != null) {
+            Long id = jsonObject.getLong("id");
+            String loginName = jsonObject.getStr("login");
+            String nickName = jsonObject.getStr("name");
+            String avatarUrl = jsonObject.getStr("avatar_url");
+            token.setGiteeUserId(id);
+            token.setLoginName(loginName);
+            token.setNickName(nickName);
+            token.setAvatarUrl(avatarUrl);
+        }
         GiteeAuthEntity giteeAuthEntity = giteeAuthDao.selectOne(new QueryWrapper<GiteeAuthEntity>().eq("gitee_user_id", token.getGiteeUserId()));
         if (giteeAuthEntity == null) {
-            //首次登录，自动注册
-            // TODO: 2021/7/22  
-        }else {
-            memberEntity = this.getById(giteeAuthEntity.getMemberId());
+            //首次登录
+            //自动注册
+            member = new MemberEntity();
+            member.setCreateTime(new Date());
+            member.setLevelId(1L);
+            member.setHeader(token.getAvatarUrl());
+            member.setNickname(token.getNickName());
+            this.save(member);
+
+            GiteeAuthEntity authEntity = BeanUtil.toBean(token, GiteeAuthEntity.class,
+                    CopyOptions.create().setIgnoreProperties("createdAt"));
+            authEntity.setCreatedAt(new Date(token.getCreatedAt() * 1000L));
+            authEntity.setCreateTime(new Date());
+            authEntity.setUpdateTime(new Date());
+            authEntity.setMemberId(member.getId());
+            giteeAuthDao.insert(authEntity);
+        } else {
+            //更新数据
+            BeanUtil.copyProperties(token, giteeAuthEntity, "createdAt");
+            giteeAuthEntity.setCreatedAt(new Date(token.getCreatedAt() * 1000L));
+            giteeAuthDao.updateById(giteeAuthEntity);
+
+            member = this.getById(giteeAuthEntity.getMemberId());
         }
-        return memberEntity;
+        return member;
     }
 
     /**
