@@ -2,14 +2,13 @@ package com.wangli.gulimall.auth.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
 import com.wangli.common.utils.R;
 import com.wangli.gulimall.auth.dto.GiteeTokenDto;
 import com.wangli.gulimall.auth.feign.MemberFeignService;
-import com.wangli.gulimall.auth.vo.resp.MemberRespVo;
+import com.wangli.common.vo.resp.MemberRespVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,9 +75,9 @@ public class OAuth2Controller {
                 //失败
                 return "redirect:http://auth.mall.com/login.html";
             } else {
+                //登录成功
                 MemberRespVo memberRespVo = login.getData(new TypeReference<MemberRespVo>() {
                 });
-                log.debug("login success memberRespVo:{}", memberRespVo);
                 session.setAttribute("loginUser", memberRespVo);
                 return "redirect:http://mall.com";
             }

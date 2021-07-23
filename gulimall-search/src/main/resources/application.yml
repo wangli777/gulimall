@@ -7,6 +7,11 @@ spring:
         server-addr: 127.0.0.1:8848
   thymeleaf:
     cache: false
+  session:
+    store-type: redis
+  redis:
+    host: mall.com
+    port: 6379
 server:
   port: 12000
 logging:

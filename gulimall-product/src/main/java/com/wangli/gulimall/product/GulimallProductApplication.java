@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * 1、整合MyBatis-Plus
@@ -22,6 +23,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *  *              1）、使用@MapperScan配置dao文件文件
  *  *              2）、告诉MyBatis-Plus，sql映射文件位置
  */
+@EnableRedisHttpSession
 @EnableFeignClients(basePackages = "com.wangli.gulimall.product.feign")
 @MapperScan("com.wangli.gulimall.product.dao")
 @SpringBootApplication

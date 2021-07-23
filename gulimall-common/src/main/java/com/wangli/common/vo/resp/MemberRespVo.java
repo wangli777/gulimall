@@ -1,4 +1,4 @@
-package com.wangli.gulimall.auth.vo.resp;
+package com.wangli.common.vo.resp;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * @author WangLi
- * @date 2021/7/23 20:59
+ * @date 2021/7/23 23:02
  * @description
  */
 @Data
