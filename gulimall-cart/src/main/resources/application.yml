@@ -13,3 +13,6 @@ spring:
     store-type: redis
 server:
   port: 30000
+logging:
+  level:
+    com.wangli.gulimall.cart: debug

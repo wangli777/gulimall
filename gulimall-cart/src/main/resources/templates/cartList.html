@@ -23,6 +23,7 @@
 
 					</ul>
 					<ul class="header-right">
+						<li>
 						<a th:if="${session.loginUser != null}" style="color: red;">欢迎, [[${session.loginUser.nickname}]]</a>
 						<a th:if="${session.loginUser == null}" href="http://auth.mall.com/login.html" class="link_login">你好，请登录</a>
 						&nbsp;

@@ -1,7 +1,8 @@
 package com.wangli.gulimall.cart.config;
 
+import com.wangli.gulimall.cart.interceptor.CartInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -11,18 +12,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class MallWebConfig implements WebMvcConfigurer {
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/cartList.html").setViewName("cartList");
+//        registry.addViewController("/success.html").setViewName("success");
+//    }
+
     /**
-     * Configure simple automated controllers pre-configured with the response
-     * status code and/or a view to render the response body. This is useful in
-     * cases where there is no need for custom controller logic -- e.g. render a
-     * home page, perform simple site URL redirects, return a 404 status with
-     * HTML content, a 204 with no content, and more.
-     *
+     * 设置一个拦截器，拦截所有 /** 请求
      * @param registry
      */
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/cartList.html").setViewName("cartList");
-        registry.addViewController("/success.html").setViewName("success");
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CartInterceptor()).addPathPatterns("/**");
     }
 }
