@@ -5,6 +5,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
+import com.wangli.common.constant.AuthServerConstant;
 import com.wangli.common.utils.R;
 import com.wangli.gulimall.auth.dto.GiteeTokenDto;
 import com.wangli.gulimall.auth.feign.MemberFeignService;
@@ -78,7 +79,7 @@ public class OAuth2Controller {
                 //登录成功
                 MemberRespVo memberRespVo = login.getData(new TypeReference<MemberRespVo>() {
                 });
-                session.setAttribute("loginUser", memberRespVo);
+                session.setAttribute(AuthServerConstant.LOGIN_USER, memberRespVo);
                 return "redirect:http://mall.com";
             }
         } else {

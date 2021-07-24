@@ -68,6 +68,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         checkPhoneUnique(registerVo.getPhone());
 
         memberEntity.setUsername(registerVo.getUserName());
+        memberEntity.setNickname(registerVo.getUserName());
         memberEntity.setMobile(registerVo.getPhone());
 
         //密码进行MD5加密

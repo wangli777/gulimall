@@ -23,7 +23,6 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  *  *              1）、使用@MapperScan配置dao文件文件
  *  *              2）、告诉MyBatis-Plus，sql映射文件位置
  */
-@EnableRedisHttpSession
 @EnableFeignClients(basePackages = "com.wangli.gulimall.product.feign")
 @MapperScan("com.wangli.gulimall.product.dao")
 @SpringBootApplication

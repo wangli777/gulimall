@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.wangli.common.constant.AuthServerConstant.LOGIN_USER;
+
 /**
  * @author WangLi
  * @date 2021/7/16 21:53
@@ -142,6 +144,15 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/login.html")
+    public String loginPage(HttpSession session) {
+        Object loginUser = session.getAttribute(LOGIN_USER);
+        if (loginUser != null) {
+            return "redirect:http://mall.com";
+        }
+        return "login";
+    }
+
     @PostMapping("/login")
     public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes, HttpSession session) {
         //调用远程登录服务
@@ -151,9 +162,8 @@ public class LoginController {
             //登录成功
             MemberRespVo data = result.getData(new TypeReference<MemberRespVo>() {
             });
-            session.setAttribute("loginUser", data);
+            session.setAttribute(LOGIN_USER, data);
             return "redirect:http://mall.com";
-
         } else {
             //登录失败
             HashMap<Object, Object> errors = Maps.newHashMap();
