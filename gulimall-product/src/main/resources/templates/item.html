@@ -263,7 +263,7 @@
     <nav>
         <div class="nav_min">
             <div class="nav_top">
-                <div class="nav_top_one"><a href="/static/item/#"><img src="/static/item/img/111.png"/></a></div>
+                <div class="nav_top_one"><a href="http://mall.com"><img src="/static/item/img/111.png"/></a></div>
                 <div class="nav_top_two"><input type="text"/>
                     <button>搜索</button>
                 </div>
@@ -661,7 +661,7 @@
 
                 <div class="box-btns clear">
                     <div class="box-btns-one">
-                        <input type="text" name="" id="" value="1"/>
+                        <input type="text" name="" id="productNum" value="1"/>
                         <div class="box-btns-one1">
 
                             <div>
@@ -678,8 +678,8 @@
                         </div>
                     </div>
                     <div class="box-btns-two">
-                        <a href="/static/item/../商品分类\index.html">
-                            立即预约
+                        <a class="addToCart" href="#" th:attr="skuId=${item.info.skuId}">
+                            加入购物车
                         </a>
                     </div>
                     <div class="box-btns-three">
@@ -1613,13 +1613,13 @@
         $("a[class='sku_attr_value checked']").parent().css({"border": "solid 1px red"});
     };
 
-    // $(".addToCart").click(function () {
-    //     let skuId = $(this).attr("skuId");
-    //     let num = $("#productNum").val();
-    //     location.href = "http://cart.mall.com/addCartItem?skuId=" + skuId + "&num=" + num;
-    //     return false;
-    // });
-    //
+    $(".addToCart").click(function () {
+        let skuId = $(this).attr("skuId");
+        let num = $("#productNum").val();
+        location.href = "http://cart.mall.com/addToCart?skuId=" + skuId + "&num=" + num;
+        return false;
+    });
+
     // $(".seckill").click(function () {
     //     var isLogin = [[${session.loginUser != null}]];     //true
     //     if (isLogin) {

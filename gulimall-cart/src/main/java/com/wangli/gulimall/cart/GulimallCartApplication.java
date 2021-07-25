@@ -8,7 +8,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.wangli.gulimall.cart.feign")
 @EnableRedisHttpSession
 public class GulimallCartApplication {
 

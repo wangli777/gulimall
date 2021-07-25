@@ -15,4 +15,10 @@ public class CartConstant {
      * 临时用户key 过期时间
      */
     public static final int TEMP_USER_COOKIE_TIMEOUT = 60 * 60 * 24 * 30;
+
+    /**
+     * 购物车前缀
+     */
+    public final static String CART_PREFIX = "gulimall:cart:";
+
 }

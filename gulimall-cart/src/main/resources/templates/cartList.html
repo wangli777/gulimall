@@ -18,7 +18,7 @@
 					<ul class="header-left">
 						<li>
 
-							<a href="">首页</a>
+							<a href="http://mall.com">首页</a>
 						</li>
 
 					</ul>
@@ -48,7 +48,7 @@
 			<div class="one_sousuo">
 				<div class="one_search_top">
 					<div class="one_top_left">
-						<a href="../" class="one_left_logo"><img src="/static/cart/img/logo1.jpg"></a>
+						<a href="http://mall.com" class="one_left_logo"><img src="/static/cart/img/logo1.jpg"></a>
 						<a href="#" class="one_left_link">购物车</a>
 					</div>
 					<div class="one_top_right">
@@ -56,7 +56,7 @@
 						<input type="button" value="搜索" class="one_right_btn">
 					</div>
 				</div>
-				<div class="one_search_load" th:if="${userId}==null">
+				<div class="one_search_load" th:if="${session.loginUser == null}">
 					<img src="/static/cart/img/shop_07.jpg" class="one_load_wraing">
 					<span>您还没有登录！登录后购物车的商品将保存到您账号中</span>
 					<a href="#"><input type="button" onclick="login()" value="立即登录" class="one_load_btn"></a>
@@ -84,36 +84,38 @@
 				</div>
 
 				<div class="One_ShopCon">
-					<ul>
-						<li th:each="cartInfo:${cartList}">
-							<div> </div>
-
+					<ul th:if="${cart.items != null}">
+						<li th:each="item:${cart.items}">
+							<div>
+							</div>
 							<div>
 								<ol>
-									<li><input type="checkbox" class="check" th:value="${cartInfo.skuId}" onchange="checkSku(this)" th:checked="(${cartInfo.isChecked}==1)?'true':'false'" /></li>
+									<li><input type="checkbox" th:attr="skuId=${item.skuId}" class="itemChecked" th:checked="${item.check}"></li>
 									<li>
-										<dt><img th:src="/static/cart/${cartInfo.imgUrl}" src="/static/cart/img\shop1.jpg" alt=""></dt>
-										<dd th:onclick="'toItem('+${cartInfo.skuId}+')'">
+										<dt><img th:src="${item.image}" alt=""></dt>
+										<dd style="width: 300px;">
 											<p>
-												<span th:text="${cartInfo.skuName}">TCL 55A950C 55英寸32核</span>
+												<span th:text="${item.title}">TCL 55A950C 55英寸32核</span>
+												<br/>
+												<span th:each="attr:${item.skuAttrValues}" th:text="${attr}">尺码: 55时 超薄曲面 人工智能</span>
 											</p>
 										</dd>
 									</li>
 									<li>
-										<p class="dj" th:text="'￥'+${cartInfo.skuPrice}">4599.00</p>
+										<p class="dj" th:text="'￥' + ${#numbers.formatDecimal(item.price,3,2)}">￥4599.00</p>
+
 									</li>
 									<li>
-										<p>
-											<span>-</span>
-											<span th:text="${cartInfo.skuNum}">5</span>
-											<span>+</span>
+										<p th:attr="skuId=${item.skuId}">
+											<span class="countOpsBtn">-</span>
+											<span class="countOpsNum" th:text="${item.count}">5</span>
+											<span class="countOpsBtn">+</span>
 										</p>
+
 									</li>
-									<li style="font-weight:bold">
-										<p class="zj" th:text="'￥'+${cartInfo.totalPrice}">￥22995.00</p>
-									</li>
+									<li style="font-weight:bold"><p class="zj">￥[[${#numbers.formatDecimal(item.totalPrice,3,2)}]]</p></li>
 									<li>
-										<p>删除</p>
+										<p class="deleteItemBtn" th:attr="skuId=${item.skuId}">删除</p>
 									</li>
 								</ol>
 							</div>
@@ -178,7 +180,9 @@
 					</div>
 					<div>
 						<ol>
-							<li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt">￥0.00</span> </li>
+
+							<li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt">￥[[${#numbers.formatDecimal(cart.totalAmount, 3, 2)}]]</span>
+							<li>优惠：￥[[${#numbers.formatDecimal(cart.reduce,1,2)}]]</li>
 
 						</ol>
 					</div>
@@ -201,7 +205,7 @@
 				</dl>
 			</div>
 			<div>
-				<button type="button">删除</button>
+				<button type="button" onclick="deleteItem()">删除</button>
 
 			</div>
 		</div>
@@ -258,8 +262,10 @@
 		}
 
 		function login() {
-			var s = encodeURIComponent("http://cart.mall.com:8087/cartList");
-			window.location.href = "http://passport.atguigu.com/index?originUrl=" + s;
+			// var s = encodeURIComponent("http://cart.mall.com:8087/cartList");
+			// window.location.href = "http://passport.atguigu.com/index?originUrl=" + s;
+
+			window.location.href = "http://auth.mall.com/login.html";
 		}
 
 		function checkSku(chkbox) {
@@ -802,5 +808,30 @@
 		}).mouseout(function() {
 			$(this).children("p").children("img").attr("src", "img/one_mian_gwc1.png")
 		})
+
+
+		$(".itemChecked").click(function () {
+			const skuId = $(this).attr("skuId");
+			const checked = $(this).prop("checked");
+			location.href = "http://cart.mall.com/checkItem?skuId=" + skuId + "&checked=" + (checked ? 1 : 0);
+		});
+
+
+		$(".countOpsBtn").click(function () {
+			const skuId = $(this).parent().attr("skuId");
+			const num = $(this).parent().find(".countOpsNum").text();
+			location.href = "http://cart.mall.com/countItem?skuId=" + skuId + "&num=" + num;
+		});
+
+
+		let deleteId = 0;
+		$(".deleteItemBtn").click(function () {
+			deleteId = $(this).attr("skuId");
+		});
+
+		//删除购物车选项
+		function deleteItem() {
+			location.href = "http://cart.mall.com/deleteItem?skuId=" + deleteId;
+		}
 	</script>
 </html>
