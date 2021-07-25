@@ -11,6 +11,12 @@ spring:
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
+  rabbitmq:
+    host: ubuntu2004.wsl
+    virtual-host: /
+    port: 5672
+    username: admin
+    password: admin
 mybatis-plus:
 #  mapper文件扫描
   mapper-locations: classpath:/mapper/**/*.xml
