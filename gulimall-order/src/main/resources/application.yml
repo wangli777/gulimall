@@ -25,6 +25,8 @@ spring:
     listener:
       simple:
         acknowledge-mode: manual
+  thymeleaf:
+    cache: false
 mybatis-plus:
 #  mapper文件扫描
   mapper-locations: classpath:/mapper/**/*.xml
