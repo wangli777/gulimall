@@ -2,7 +2,7 @@
 #  datasource:
 #    username: root
 #    password: root
-#    url: jdbc:mysql://mall.com:3305/gulimall_sms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://ubuntu2004.wsl:3305/gulimall_sms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #  application:
 #    name: gulimall-coupon

@@ -17,7 +17,7 @@ spring:
   application:
     name: gulimall-third-party
 server:
-  port: 30000
+  port: 40000
 logging:
   level:
     com.wangli.gulimall.thirdparty: debug
