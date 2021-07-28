@@ -7,6 +7,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.wangli.common.constant.CartConstant;
 import com.wangli.common.utils.R;
+import com.wangli.gulimall.cart.exception.CartExceptionHandler;
 import com.wangli.gulimall.cart.feign.ProductFeignService;
 import com.wangli.gulimall.cart.interceptor.CartInterceptor;
 import com.wangli.gulimall.cart.service.CartService;
@@ -21,6 +22,8 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -173,11 +176,11 @@ public class CartServiceImpl implements CartService {
         if (num == 0) {
             //删除
             cartOps.delete(skuId.toString());
-        }else{
+        } else {
             cartItem.setCount(num);
             //序列化存入redis中
             String redisValue = JSONUtil.toJsonStr(cartItem);
-            cartOps.put(skuId.toString(),redisValue);
+            cartOps.put(skuId.toString(), redisValue);
         }
     }
 
@@ -185,6 +188,38 @@ public class CartServiceImpl implements CartService {
     public void deleteIdCartInfo(Integer skuId) {
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
         cartOps.delete(skuId.toString());
+    }
+
+    @Override
+    public List<CartItemVo> getUserCartItems() {
+
+        List<CartItemVo> cartItemVoList;
+        //获取当前用户登录的信息
+        UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
+        //如果用户未登录直接返回null
+        if (userInfoTo.getUserId() == null) {
+            return new ArrayList<>(0);
+        } else {
+            //获取购物车项
+            String cartKey = CartConstant.CART_PREFIX + userInfoTo.getUserId();
+            //获取所有的
+            List<CartItemVo> cartItems = getCartItems(cartKey);
+            if (cartItems == null) {
+                throw new CartExceptionHandler();
+            }
+            //筛选出选中的
+            cartItemVoList = cartItems.stream()
+                    .filter(CartItemVo::getCheck)
+                    .map(item -> {
+                        //更新为最新的价格（查询数据库）
+                        BigDecimal price = productFeignService.getPrice(item.getSkuId());
+                        item.setPrice(price);
+                        return item;
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        return cartItemVoList;
     }
 
     private List<CartItemVo> getCartItems(String cartKey) {
