@@ -1,12 +1,16 @@
 package com.wangli.gulimall.order.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
+import com.wangli.common.utils.R;
 import com.wangli.common.vo.resp.MemberRespVo;
 import com.wangli.gulimall.order.feign.CartFeignService;
 import com.wangli.gulimall.order.feign.MemberFeignService;
+import com.wangli.gulimall.order.feign.WmsFeignService;
 import com.wangli.gulimall.order.interceptor.LoginInterceptor;
 import com.wangli.gulimall.order.vo.MemberAddressVo;
 import com.wangli.gulimall.order.vo.OrderConfirmVo;
 import com.wangli.gulimall.order.vo.OrderItemVo;
+import com.wangli.gulimall.order.vo.SkuStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -37,6 +42,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     private CartFeignService cartFeignService;
+
+    @Autowired
+    private WmsFeignService wmsFeignService;
 
     @Autowired
     ThreadPoolExecutor executor;
@@ -87,7 +95,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             //需要使用Feign拦截器
             List<OrderItemVo> cartItems = cartFeignService.getCurrentCartItems();
             confirmVo.setItems(cartItems);
-        }, executor);
+        }, executor).thenRunAsync(()->{
+            List<OrderItemVo> items = confirmVo.getItems();
+            //获取全部商品的id
+            List<Long> skuIds = items.stream()
+                    .map((OrderItemVo::getSkuId))
+                    .collect(Collectors.toList());
+
+            //远程查询商品库存信息
+            R skuHasStock = wmsFeignService.getSkuHasStock(skuIds);
+            List<SkuStockVo> skuStockVos = skuHasStock.getData("data", new TypeReference<List<SkuStockVo>>() {});
+
+            if (skuStockVos != null && skuStockVos.size() > 0) {
+                //将skuStockVos集合转换为map
+                Map<Long, Boolean> skuHasStockMap = skuStockVos.stream().collect(Collectors.toMap(SkuStockVo::getSkuId, SkuStockVo::getHasStock));
+                confirmVo.setStocks(skuHasStockMap);
+            }
+        },executor);
 
         //3、查询用户积分
         Integer integration = memberRespVo.getIntegration();
