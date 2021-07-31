@@ -1,6 +1,7 @@
 package com.wangli.common.vo.resp;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  * @date 2021/7/23 23:02
  * @description
  */
+@NoArgsConstructor
 @Data
 public class MemberRespVo implements Serializable {
     private static final long serialVersionUID = 1L;
