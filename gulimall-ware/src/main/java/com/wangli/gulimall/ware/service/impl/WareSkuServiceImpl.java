@@ -130,7 +130,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
          */
         WareOrderTaskEntity wareOrderTaskEntity = new WareOrderTaskEntity();
         wareOrderTaskEntity.setOrderSn(vo.getOrderSn());
-        wareOrderTaskEntity.setCreateTime(new Date());
+        wareOrderTaskEntity.setCreateTime(System.currentTimeMillis());
         wareOrderTaskService.save(wareOrderTaskEntity);
 
 

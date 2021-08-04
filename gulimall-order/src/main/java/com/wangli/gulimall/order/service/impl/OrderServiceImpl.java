@@ -18,6 +18,7 @@ import com.wangli.gulimall.order.service.OrderItemService;
 import com.wangli.gulimall.order.to.OrderCreateTo;
 import com.wangli.gulimall.order.to.SpuInfoVo;
 import com.wangli.gulimall.order.vo.*;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -163,10 +164,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
      * @param vo
      * @return
      */
-    // @Transactional(isolation = Isolation.READ_COMMITTED) 设置事务的隔离级别
-    // @Transactional(propagation = Propagation.REQUIRED)   设置事务的传播级别
+    @GlobalTransactional
     @Transactional(rollbackFor = Exception.class)
-    // @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo) {
 
@@ -228,13 +227,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 if (r.getCode() == 0) {
                     //锁定成功
                     responseVo.setOrder(order.getOrder());
-                    // int i = 10/0;
+//                     int i = 10/0;
 
                     //TODO 订单创建成功，发送消息给MQ
 //                    rabbitTemplate.convertAndSend("order-event-exchange","order.create.order",order.getOrder());
 
                     //删除购物车里的数据
-                    redisTemplate.delete(CartConstant.CART_PREFIX + memberResponseVo.getId());
+//                    redisTemplate.delete(CartConstant.CART_PREFIX + memberResponseVo.getId());
                     return responseVo;
                 } else {
                     //锁定失败
@@ -267,8 +266,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
         //获取订单项信息
         List<OrderItemEntity> orderItems = orderCreateTo.getOrderItems();
-        //批量保存订单项数据
-        orderItemService.saveBatch(orderItems);
+        //批量保存订单项数据 使用seata0.7.1时报错
+//        orderItemService.saveBatch(orderItems);
+
+        for (OrderItemEntity orderItem : orderItems) {
+            orderItemService.save(orderItem);
+        }
     }
 
     private OrderCreateTo createOrder() {

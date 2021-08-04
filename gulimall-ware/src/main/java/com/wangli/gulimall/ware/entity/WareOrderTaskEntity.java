@@ -67,7 +67,7 @@ public class WareOrderTaskEntity implements Serializable {
 	/**
 	 * create_time
 	 */
-	private Date createTime;
+	private Long createTime;
 	/**
 	 * 仓库id
 	 */
