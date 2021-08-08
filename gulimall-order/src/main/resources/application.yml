@@ -44,4 +44,6 @@ mall:
     core-size: 50
     max-size: 200
     keep-alive-time: 10
-
+logging:
+  level:
+    com.wangli.gulimall.order: debug

@@ -164,7 +164,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
      * @param vo
      * @return
      */
-    @GlobalTransactional
+//    @GlobalTransactional //（seata的 AT模式 效率不高，不适合高并发）
     @Transactional(rollbackFor = Exception.class)
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo) {
