@@ -1,4 +1,10 @@
 spring:
+  rabbitmq:
+    host: ubuntu2004.wsl
+    virtual-host: /
+    port: 5672
+    username: admin
+    password: admin
   datasource:
     username: root
     password: root
